@@ -15,10 +15,12 @@ Your MongoDB URI has been added to the `.env` file, but you need to **replace `<
 
 3. **Replace `<db_password>`** with your actual MongoDB Atlas database password
 
-   For example, if your password is `MySecurePass123`, it should look like:
+   For example:
    ```
-   MONGODB_URI=mongodb+srv://jescaps_db_user:MySecurePass123@cluster0.wclxgzz.mongodb.net/?appName=Cluster0
+   MONGODB_URI=mongodb+srv://your_username:your_password@cluster0.xxxxx.mongodb.net/?appName=Cluster0
    ```
+   
+   ⚠️ **Important**: Never commit your actual credentials to Git. Keep them only in your local `.env` file.
 
 4. **Save the file**
 

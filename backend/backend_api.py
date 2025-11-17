@@ -22,15 +22,17 @@ from backend.auth import (
 )
 from datetime import timedelta
 
-# Try to load from .env file
+# Load API key from .env file
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 
-# If API key is not found in .env, use the hardcoded one
 if not api_key:
-    api_key = "AIzaSyDwqxrKMIOstqjTmkiiB67taeTRMYRg96E"
+    raise ValueError(
+        "GOOGLE_API_KEY not found in environment variables. "
+        "Please create a .env file with your Google API key."
+    )
 
-print(f"Using API key: {api_key}")
+print("✅ Google API key loaded successfully")
 configure_genai(api_key)
 
 app = FastAPI(title="ATS Scanner API", version="1.0.0")
