@@ -109,7 +109,7 @@ Open `frontend/index.html` directly in your browser.
 
 ## 📬 Contact
 
-Made with ❤️ by [Vishal Patil](https://github.com/VishalPatil54)  
+Made with ❤️ by [Jescaps Antwi](https://github.com/JescapsAntwi)  
 For any inquiries or collaborations, feel free to reach out via LinkedIn or email.
 
 ---
