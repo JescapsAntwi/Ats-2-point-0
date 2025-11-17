@@ -127,7 +127,7 @@ Open `frontend/index.html` directly in your browser.
 ## 📸 Screenshots
 
 ### Landing Page
-![ATS Scanner Landing Page](docs/images/ats-scanner-landing.png)
+![ATS Scanner Landing Page](docs/images/ats-scanner-2-landing.png)
 
 The main interface allows users to paste job descriptions and upload their resume PDFs for instant AI-powered analysis.
 
