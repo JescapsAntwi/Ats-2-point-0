@@ -24,17 +24,40 @@
 ## 📁 Project Structure
 
 ```
-ATS-Scanner/
+ATS_Scanner/
 │
 ├── backend/                  # FastAPI backend
-│   ├── backend_api.py        # API route for analysis
-│   └── helper.py             # LLM prompt logic + PDF parsing
+│   ├── __init__.py          # Package initializer
+│   ├── backend_api.py       # Main API routes and endpoints
+│   ├── auth.py              # Authentication logic (JWT, password hashing)
+│   ├── database.py          # MongoDB connection and operations
+│   ├── helper.py            # LLM prompt logic + PDF parsing
+│   └── models.py            # Pydantic models for request/response
 │
-├── frontend/                 # Static HTML frontend
-│   └── index.html            # User interface
+├── frontend/                # Static HTML/CSS/JS frontend
+│   ├── index.html           # Landing page with resume scanner
+│   ├── dashboard.html       # User dashboard with scan history
+│   ├── login.html           # User login page
+│   ├── signup.html          # User registration page
+│   ├── auth.js              # Authentication utilities
+│   ├── dashboard.js         # Dashboard functionality
+│   ├── script.js            # Main page scripts
+│   └── styles.css           # Global styles
 │
-├── requirements.txt          # Python dependencies
-└── .gitignore                # Ignore env files and unnecessary folders
+├── docs/                    # Documentation
+│   ├── MONGODB_SETUP.md     # MongoDB Atlas setup guide
+│   ├── SETUP.md             # Project setup instructions
+│   └── sample.pdf           # Sample resume for testing
+│
+├── tests/                   # Test files
+│
+├── venv312/                 # Python virtual environment
+│
+├── .env                     # Environment variables (API keys, DB connection)
+├── .gitignore               # Git ignore rules
+├── README.md                # Project documentation
+├── requirements.txt         # Python dependencies
+└── start_server.sh          # Server startup script
 ```
 
 ---
@@ -54,7 +77,7 @@ ATS-Scanner/
 ### 1. Clone the repository
 
 ```bash
-git clone git@github.com:VishalPatil54/ATS-Scanner.git
+git clone git@github.com:jescapsantwi/ATS-2-point-0.git
 cd ATS-Scanner
 ```
 
