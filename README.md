@@ -43,6 +43,7 @@ ATS-Scanner/
 
 - **Frontend**: HTML, Tailwind CSS, Bootstrap Icons
 - **Backend**: Python, FastAPI
+- **Database**: MongoDB
 - **AI Integration**: Google Gemini via `google.generativeai`
 - **PDF Parsing**: PyPDF2
 
