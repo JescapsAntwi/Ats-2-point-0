@@ -6,8 +6,9 @@ __pycache__/
 *.py[cod]
 *.pyo
 
-# Ignore environment variables
+# Ignore environment variables and sensitive docs
 .env
+docs/MONGODB_SETUP.md
 
 # Ignore OS & editor files
 .DS_Store
