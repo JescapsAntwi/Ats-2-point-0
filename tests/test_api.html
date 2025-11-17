@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test API</title>
+</head>
+<body>
+    <h1>Test API</h1>
+    <input type="file" id="resume" accept=".pdf">
+    <textarea id="jd" placeholder="Enter job description"></textarea>
+    <button onclick="testAPI()">Test API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const jd = document.getElementById('jd').value;
+            const resume = document.getElementById('resume').files[0];
+            
+            if (!jd || !resume) {
+                alert("Please enter a job description and upload a PDF resume.");
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append("jd", jd);
+            formData.append("resume", resume);
+            
+            document.getElementById('result').textContent = "Loading...";
+            
+            try {
+                const response = await fetch("http://localhost:8000/analyze-resume/", {
+                    method: "POST",
+                    body: formData
+                });
+                
+                const result = await response.json();
+                document.getElementById('result').textContent = JSON.stringify(result, null, 2);
+            } catch (err) {
+                document.getElementById('result').textContent = "Error: " + err.message;
+            }
+        }
+    </script>
+</body>
+</html>

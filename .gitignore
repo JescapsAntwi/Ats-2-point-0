@@ -1,0 +1,19 @@
+# Ignore Python virtual environments
+venv312/
+
+# Ignore compiled Python files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignore environment variables
+.env
+
+# Ignore OS & editor files
+.DS_Store
+.vscode/
+.idea/
+
+# Optional: ignore log or temp files
+*.log
+*.tmp
