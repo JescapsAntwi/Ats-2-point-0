@@ -78,7 +78,7 @@ ATS_Scanner/
 
 ```bash
 git clone git@github.com:jescapsantwi/ATS-2-point-0.git
-cd ATS-Scanner
+cd ATS-2-point-0
 ```
 
 ### 2. Set up a virtual environment
