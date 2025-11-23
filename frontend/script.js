@@ -303,3 +303,29 @@ document.body.addEventListener('wheel', e => {
     return 
 }, { passive: false });
 
+
+
+// Contact form handler - opens email client
+function handleContactSubmit(event) {
+    console.log('handleContactSubmit called');
+    event.preventDefault();
+    
+    // Get form values
+    const name = document.getElementById('contactName').value;
+    const email = document.getElementById('contactEmail').value;
+    const subject = document.getElementById('contactSubject').value;
+    const message = document.getElementById('contactMessage').value;
+    
+    console.log('Form values:', { name, email, subject, message });
+    
+    // Compose email body
+    const emailBody = `Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
+    
+    // Create mailto link
+    const mailtoLink = `mailto:antwijescaps1@gmail.com?subject=${encodeURIComponent(subject)}&body=${emailBody}`;
+    
+    console.log('Opening mailto link:', mailtoLink);
+    
+    // Open email client
+    window.location.href = mailtoLink;
+}
