@@ -12,27 +12,43 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="bg-slate-50">
+<style>
+    .bg-cream { background-color: #FAF9F6; }
+    .bg-cream-light { background-color: #F5F5F0; }
+    .text-indigo-primary { color: #1E3A8A; }
+    .text-indigo-deep { color: #312E81; }
+    .bg-indigo-primary { background-color: #1E3A8A; }
+    .bg-indigo-deep { background-color: #312E81; }
+    .text-accent { color: #DAA520; }
+    .bg-accent { background-color: #DAA520; }
+    .bg-accent-light { background-color: #FDB813; }
+    .border-accent { border-color: #DAA520; }
+    .hover\:bg-accent:hover { background-color: #DAA520; }
+    .hover\:text-accent:hover { color: #DAA520; }
+    .from-indigo-primary { --tw-gradient-from: #1E3A8A; }
+    .to-indigo-deep { --tw-gradient-to: #312E81; }
+    .from-accent { --tw-gradient-from: #B8860B; }
+    .to-accent-light { --tw-gradient-to: #DAA520; }
+</style>
+<body class="bg-cream">
     <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
                     <a href="#" class="flex items-center">
-                        <i class="bi bi-file-earmark-check text-indigo-600 text-2xl mr-2"></i>
-                        <span
-                            class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">ATS
-                            Scanner</span>
+                        <img src="assets/logo.png" alt="ATS Scanner Logo" class="h-10 w-10 mr-3">
+                        <span class="text-xl font-bold text-indigo-deep">ATS Scanner</span>
                     </a>
                 </div>
                 <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#home" class="text-gray-700 hover:text-indigo-600 font-medium">Home</a>
-                    <a href="#about" class="text-gray-700 hover:text-indigo-600 font-medium">About</a>
-                    <a href="#contact" class="text-gray-700 hover:text-indigo-600 font-medium">Contact</a>
+                    <a href="#home" class="text-gray-700 hover:text-accent font-medium">Home</a>
+                    <a href="#about" class="text-gray-700 hover:text-accent font-medium">About</a>
+                    <a href="#contact" class="text-gray-700 hover:text-accent font-medium">Contact</a>
                     <span id="userName" class="text-gray-700"></span>
-                    <a href="dashboard.html" id="dashboardLink" class="text-gray-700 hover:text-indigo-600 font-medium hidden">Dashboard</a>
-                    <a href="login.html" id="loginLink" class="text-gray-700 hover:text-indigo-600 font-medium">Login</a>
-                    <a href="signup.html" id="signupLink" class="text-gray-700 hover:text-indigo-600 font-medium">Sign Up</a>
-                    <button onclick="logout()" id="logoutButton" class="text-gray-700 hover:text-indigo-600 font-medium hidden">Logout</button>
+                    <a href="dashboard.html" id="dashboardLink" class="text-gray-700 hover:text-accent font-medium hidden">Dashboard</a>
+                    <a href="login.html" id="loginLink" class="text-gray-700 hover:text-accent font-medium">Login</a>
+                    <a href="signup.html" id="signupLink" class="text-gray-700 hover:text-accent font-medium">Sign Up</a>
+                    <button onclick="logout()" id="logoutButton" class="text-gray-700 hover:text-accent font-medium hidden">Logout</button>
                 </div>
                 <div class="md:hidden flex items-center">
                     <button id="menu-toggle" class="text-gray-500 hover:text-indigo-600">
@@ -58,7 +74,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h1
-                    class="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                    class="text-4xl md:text-6xl font-bold mb-6 text-indigo-primary">
                     ATS Resume Scanner</h1>
                 <p class="text-xl text-gray-600 max-w-3xl mx-auto">Optimize your resume for Applicant Tracking Systems
                     with our AI-powered analysis tool. Get instant feedback and improve your chances of landing that
@@ -67,7 +83,7 @@
 
             <div class="max-w-4xl mx-auto bg-white rounded-2xl custom-shadow p-8">
                 <div class="space-y-6">
-                    <div class="bg-indigo-50 p-4 rounded-lg">
+                    <div class="bg-cream-light p-4 rounded-lg border border-accent">
                         <div class="flex items-center mb-2">
                             <i class="bi bi-lightbulb-fill text-yellow-500 mr-2"></i>
                             <span class="font-medium">Pro Tip</span>
@@ -123,11 +139,11 @@
 
                     <div class="flex space-x-4">
                         <button onclick="analyzeResume()"
-                            class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg hover:opacity-90 transition flex items-center justify-center font-medium">
+                            class="flex-1 bg-indigo-primary text-white py-3 px-4 rounded-lg hover:bg-indigo-deep transition flex items-center justify-center font-medium">
                             <i class="bi bi-search mr-2"></i> Analyze Resume
                         </button>
                         <button onclick="analyzeAndSaveResume()" id="saveButton"
-                            class="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 px-4 rounded-lg hover:opacity-90 transition flex items-center justify-center font-medium hidden">
+                            class="flex-1 bg-accent text-white py-3 px-4 rounded-lg hover:bg-accent-light transition flex items-center justify-center font-medium hidden">
                             <i class="bi bi-save mr-2"></i> Analyze & Save
                         </button>
                     </div>
@@ -180,11 +196,11 @@
         </div>
     </section>
 
-    <section id="about" class="py-20 bg-indigo-50">
+    <section id="about" class="py-20 bg-cream-light">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900">About Our ATS Scanner</h2>
-                <div class="h-1 w-20 bg-indigo-600 mx-auto mt-4 mb-6"></div>
+                <h2 class="text-3xl font-bold text-indigo-deep">About Our ATS Scanner</h2>
+                <div class="h-1 w-20 bg-accent mx-auto mt-4 mb-6"></div>
                 <p class="text-lg text-gray-600 max-w-3xl mx-auto">
                     Our ATS Scanner utilizes advanced Large Language Models and Generative AI to provide accurate
                     analysis of your resume against job descriptions. 
@@ -194,12 +210,12 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
                 <div
                     class="bg-white rounded-xl shadow-md overflow-hidden transform transition-transform hover:scale-105">
-                    <div class="h-2 bg-indigo-600"></div>
+                    <div class="h-2 bg-accent"></div>
                     <div class="p-6">
-                        <div class="rounded-full bg-indigo-100 w-14 h-14 flex items-center justify-center mb-4">
-                            <i class="bi bi-lightning-charge text-2xl text-indigo-600"></i>
+                        <div class="rounded-full bg-cream-light w-14 h-14 flex items-center justify-center mb-4 border-2 border-accent">
+                            <i class="bi bi-lightning-charge text-2xl text-accent"></i>
                         </div>
-                        <h3 class="text-xl font-semibold mb-2">Fast Analysis</h3>
+                        <h3 class="text-xl font-semibold mb-2 text-indigo-deep">Fast Analysis</h3>
                         <p class="text-gray-600">Get instant feedback on your resume's compatibility with job
                             requirements, saving you time in your job search.</p>
                     </div>
@@ -207,12 +223,12 @@
 
                 <div
                     class="bg-white rounded-xl shadow-md overflow-hidden transform transition-transform hover:scale-105">
-                    <div class="h-2 bg-purple-600"></div>
+                    <div class="h-2 bg-indigo-primary"></div>
                     <div class="p-6">
-                        <div class="rounded-full bg-purple-100 w-14 h-14 flex items-center justify-center mb-4">
-                            <i class="bi bi-graph-up text-2xl text-purple-600"></i>
+                        <div class="rounded-full bg-cream-light w-14 h-14 flex items-center justify-center mb-4 border-2 border-indigo-primary">
+                            <i class="bi bi-graph-up text-2xl text-indigo-primary"></i>
                         </div>
-                        <h3 class="text-xl font-semibold mb-2">Accurate Results</h3>
+                        <h3 class="text-xl font-semibold mb-2 text-indigo-deep">Accurate Results</h3>
                         <p class="text-gray-600">Powered by Google's Gemini AI for accurate, intelligent resume
                             analysis.</p>
                     </div>
@@ -220,12 +236,12 @@
 
                 <div
                     class="bg-white rounded-xl shadow-md overflow-hidden transform transition-transform hover:scale-105">
-                    <div class="h-2 bg-blue-600"></div>
+                    <div class="h-2 bg-accent"></div>
                     <div class="p-6">
-                        <div class="rounded-full bg-blue-100 w-14 h-14 flex items-center justify-center mb-4">
-                            <i class="bi bi-arrow-up-circle text-2xl text-blue-600"></i>
+                        <div class="rounded-full bg-cream-light w-14 h-14 flex items-center justify-center mb-4 border-2 border-accent">
+                            <i class="bi bi-arrow-up-circle text-2xl text-accent"></i>
                         </div>
-                        <h3 class="text-xl font-semibold mb-2">Actionable Tips</h3>
+                        <h3 class="text-xl font-semibold mb-2 text-indigo-deep">Actionable Tips</h3>
                         <p class="text-gray-600">Get specific suggestions for improvement to help you tailor your resume
                             for each job application.</p>
                     </div>
@@ -235,34 +251,34 @@
             <div class="mt-20">
                 <div class="grid md:grid-cols-2 gap-12 items-center">
                     <div>
-                        <h3 class="text-2xl font-bold mb-4">How It Works</h3>
+                        <h3 class="text-2xl font-bold mb-4 text-indigo-deep">How It Works</h3>
                         <div class="space-y-6">
                             <div class="flex items-start">
                                 <div
-                                    class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold">
+                                    class="flex-shrink-0 h-10 w-10 rounded-full bg-accent flex items-center justify-center text-white font-bold">
                                     1</div>
                                 <div class="ml-4">
-                                    <h4 class="font-medium">Input Job Description</h4>
+                                    <h4 class="font-medium text-indigo-deep">Input Job Description</h4>
                                     <p class="text-gray-600 mt-1">Paste the job posting to help our AI understand what
                                         the employer is looking for.</p>
                                 </div>
                             </div>
                             <div class="flex items-start">
                                 <div
-                                    class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold">
+                                    class="flex-shrink-0 h-10 w-10 rounded-full bg-accent flex items-center justify-center text-white font-bold">
                                     2</div>
                                 <div class="ml-4">
-                                    <h4 class="font-medium">Upload Your Resume</h4>
+                                    <h4 class="font-medium text-indigo-deep">Upload Your Resume</h4>
                                     <p class="text-gray-600 mt-1">Upload your resume as a PDF file or paste the text
                                         content.</p>
                                 </div>
                             </div>
                             <div class="flex items-start">
                                 <div
-                                    class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold">
+                                    class="flex-shrink-0 h-10 w-10 rounded-full bg-accent flex items-center justify-center text-white font-bold">
                                     3</div>
                                 <div class="ml-4">
-                                    <h4 class="font-medium">Get Detailed Analysis</h4>
+                                    <h4 class="font-medium text-indigo-deep">Get Detailed Analysis</h4>
                                     <p class="text-gray-600 mt-1">Receive a comprehensive compatibility score, keyword
                                         analysis, and suggestions.</p>
                                 </div>
@@ -283,8 +299,8 @@
     <section id="contact" class="py-20 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900">Contact Us</h2>
-                <div class="h-1 w-20 bg-indigo-600 mx-auto mt-4 mb-6"></div>
+                <h2 class="text-3xl font-bold text-indigo-deep">Contact Us</h2>
+                <div class="h-1 w-20 bg-accent mx-auto mt-4 mb-6"></div>
                 <p class="text-lg text-gray-600 max-w-3xl mx-auto">
                     Have questions about our ATS Scanner? Get in touch with us.
                 </p>
@@ -316,7 +332,7 @@
                                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                             </div>
                             <button type="submit"
-                                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-md hover:opacity-90 transition font-medium">
+                                class="w-full bg-accent text-white py-3 rounded-md hover:bg-accent-light transition font-medium">
                                 Send Message
                             </button>
                         </form>

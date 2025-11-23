@@ -12,30 +12,39 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="bg-slate-50">
+<style>
+    .bg-cream { background-color: #FAF9F6; }
+    .bg-cream-light { background-color: #F5F5F0; }
+    .text-indigo-deep { color: #312E81; }
+    .bg-indigo-primary { background-color: #1E3A8A; }
+    .text-accent { color: #DAA520; }
+    .bg-accent { background-color: #DAA520; }
+    .hover\:text-accent:hover { color: #DAA520; }
+    .from-accent { --tw-gradient-from: #B8860B; }
+    .to-accent-light { --tw-gradient-to: #FDB813; }
+</style>
+<body class="bg-cream">
     <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
                     <a href="index.html" class="flex items-center">
-                        <i class="bi bi-file-earmark-check text-indigo-600 text-2xl mr-2"></i>
-                        <span
-                            class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">ATS
-                            Scanner</span>
+                        <img src="assets/logo.png" alt="ATS Scanner Logo" class="h-10 w-10 mr-3">
+                        <span class="text-xl font-bold text-indigo-deep">ATS Scanner</span>
                     </a>
                 </div>
                 <div class="hidden md:flex space-x-8 items-center">
-                    <a href="index.html" class="text-gray-700 hover:text-indigo-600 font-medium">Home</a>
-                    <a href="dashboard.html" class="text-indigo-600 font-medium">Dashboard</a>
+                    <a href="index.html" class="text-gray-700 hover:text-accent font-medium">Home</a>
+                    <a href="dashboard.html" class="text-accent font-medium">Dashboard</a>
                     <span id="userName" class="text-gray-700"></span>
-                    <button onclick="logout()" class="text-gray-700 hover:text-indigo-600 font-medium">Logout</button>
+                    <button onclick="logout()" class="text-gray-700 hover:text-accent font-medium">Logout</button>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Welcome Banner -->
-    <div id="welcomeBanner" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-20px);" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white py-6 shadow-lg">
+    <div id="welcomeBanner" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-20px); background: linear-gradient(135deg, #1E3A8A 0%, #DAA520 100%);" class="text-white py-6 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
@@ -57,7 +66,7 @@
     <section class="min-h-screen pt-16 pb-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="mb-8">
-                <h1 class="text-3xl font-bold mb-2 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                <h1 class="text-3xl font-bold mb-2 text-indigo-deep">
                     Scan History
                 </h1>
                 <p class="text-gray-600">View and manage your past resume scans</p>

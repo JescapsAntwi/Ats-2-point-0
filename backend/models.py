@@ -49,10 +49,22 @@ class UserResponse(BaseModel):
     id: str
     email: str
     name: Optional[str] = None
+    is_verified: bool = False
     created_at: datetime
 
     class Config:
         json_encoders = {ObjectId: str}
+
+
+class VerifyEmail(BaseModel):
+    """Model for email verification"""
+    email: EmailStr
+    verification_code: str = Field(..., min_length=6, max_length=6)
+
+
+class ResendVerification(BaseModel):
+    """Model for resending verification code"""
+    email: EmailStr
 
 
 # Scan Models

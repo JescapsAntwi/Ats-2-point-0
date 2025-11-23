@@ -14,11 +14,15 @@ from backend.helper import configure_genai, extract_pdf_text, prepare_prompt, ge
 from backend.database import get_users_collection, get_scans_collection
 from backend.models import (
     UserCreate, UserLogin, UserUpdate, UserResponse,
-    ScanCreate, ScanUpdate, ScanResponse, ScanSummary, ScanListResponse, Token
+    ScanCreate, ScanUpdate, ScanResponse, ScanSummary, ScanListResponse, Token,
+    VerifyEmail, ResendVerification
 )
 from backend.auth import (
     get_password_hash, verify_password, create_access_token,
     get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
+)
+from backend.email_service import (
+    generate_verification_code, send_verification_email, send_welcome_email
 )
 from datetime import timedelta
 
@@ -63,25 +67,38 @@ async def startup_event():
 
 # ==================== AUTHENTICATION ENDPOINTS ====================
 
-@app.post("/api/auth/signup", response_model=Token, status_code=status.HTTP_201_CREATED)
+@app.post("/api/auth/signup", response_model=dict, status_code=status.HTTP_201_CREATED)
 async def signup(user_data: UserCreate):
-    """User registration endpoint"""
+    """User registration endpoint - creates unverified account and sends verification email"""
     try:
         users_collection = get_users_collection()
         
         # Check if user already exists
         existing_user = users_collection.find_one({"email": user_data.email})
         if existing_user:
+            # If user exists but not verified, allow resending verification
+            if not existing_user.get("is_verified", False):
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Email already registered but not verified. Please check your email or request a new code."
+                )
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Email already registered"
             )
+        
+        # Generate verification code
+        verification_code = generate_verification_code()
+        code_expires_at = datetime.utcnow() + timedelta(minutes=15)
         
         # Hash password and create user
         hashed_password = get_password_hash(user_data.password)
         user_doc = {
             "email": user_data.email,
             "password": hashed_password,
+            "is_verified": False,
+            "verification_code": verification_code,
+            "code_expires_at": code_expires_at,
             "created_at": datetime.utcnow()
         }
         
@@ -92,22 +109,22 @@ async def signup(user_data: UserCreate):
         result = users_collection.insert_one(user_doc)
         user_id = str(result.inserted_id)
         
-        # Create access token
-        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = create_access_token(
-            data={"sub": user_id, "email": user_data.email},
-            expires_delta=access_token_expires
-        )
+        # Send verification email
+        try:
+            send_verification_email(user_data.email, verification_code, user_data.name)
+        except Exception as email_error:
+            # If email fails, delete the user and raise error
+            users_collection.delete_one({"_id": result.inserted_id})
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to send verification email: {str(email_error)}"
+            )
         
-        # Return user info and token
-        user_response = UserResponse(
-            id=user_id,
-            email=user_data.email,
-            name=user_data.name,
-            created_at=user_doc["created_at"]
-        )
-        
-        return Token(access_token=access_token, token_type="bearer", user=user_response)
+        return {
+            "message": "Account created successfully. Please check your email for verification code.",
+            "email": user_data.email,
+            "user_id": user_id
+        }
     except HTTPException:
         raise
     except Exception as e:
@@ -118,6 +135,124 @@ async def signup(user_data: UserCreate):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Internal server error: {str(e)}"
         )
+
+
+@app.post("/api/auth/verify-email", response_model=Token)
+async def verify_email(verification_data: VerifyEmail):
+    """Verify email with code and activate account"""
+    users_collection = get_users_collection()
+    
+    # Find user by email
+    user = users_collection.find_one({"email": verification_data.email})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    # Check if already verified
+    if user.get("is_verified", False):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already verified"
+        )
+    
+    # Check if code matches
+    if user.get("verification_code") != verification_data.verification_code:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid verification code"
+        )
+    
+    # Check if code expired
+    if user.get("code_expires_at") and user["code_expires_at"] < datetime.utcnow():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Verification code expired. Please request a new one."
+        )
+    
+    # Mark user as verified and remove verification code
+    users_collection.update_one(
+        {"_id": user["_id"]},
+        {
+            "$set": {"is_verified": True},
+            "$unset": {"verification_code": "", "code_expires_at": ""}
+        }
+    )
+    
+    # Send welcome email
+    try:
+        send_welcome_email(user["email"], user.get("name"))
+    except Exception as e:
+        print(f"Failed to send welcome email: {str(e)}")
+    
+    # Create access token
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": str(user["_id"]), "email": user["email"]},
+        expires_delta=access_token_expires
+    )
+    
+    # Return user info and token
+    user_response = UserResponse(
+        id=str(user["_id"]),
+        email=user["email"],
+        name=user.get("name"),
+        is_verified=True,
+        created_at=user["created_at"]
+    )
+    
+    return Token(access_token=access_token, token_type="bearer", user=user_response)
+
+
+@app.post("/api/auth/resend-verification", response_model=dict)
+async def resend_verification(resend_data: ResendVerification):
+    """Resend verification code"""
+    users_collection = get_users_collection()
+    
+    # Find user by email
+    user = users_collection.find_one({"email": resend_data.email})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    
+    # Check if already verified
+    if user.get("is_verified", False):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already verified"
+        )
+    
+    # Generate new verification code
+    verification_code = generate_verification_code()
+    code_expires_at = datetime.utcnow() + timedelta(minutes=15)
+    
+    # Update user with new code
+    users_collection.update_one(
+        {"_id": user["_id"]},
+        {
+            "$set": {
+                "verification_code": verification_code,
+                "code_expires_at": code_expires_at
+            }
+        }
+    )
+    
+    # Send verification email
+    try:
+        send_verification_email(user["email"], verification_code, user.get("name"))
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to send verification email: {str(e)}"
+        )
+    
+    return {
+        "message": "Verification code sent successfully. Please check your email.",
+        "email": user["email"]
+    }
 
 
 @app.post("/api/auth/login", response_model=Token)
@@ -140,6 +275,13 @@ async def login(credentials: UserLogin):
             detail="Incorrect email or password"
         )
     
+    # Check if email is verified
+    if not user.get("is_verified", False):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Email not verified. Please check your email for verification code."
+        )
+    
     # Create access token
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
@@ -152,6 +294,7 @@ async def login(credentials: UserLogin):
         id=str(user["_id"]),
         email=user["email"],
         name=user.get("name"),
+        is_verified=user.get("is_verified", True),
         created_at=user["created_at"]
     )
     

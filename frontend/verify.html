@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email | ATS Scanner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<style>
+    .bg-cream { background-color: #FAF9F6; }
+    .text-indigo-deep { color: #312E81; }
+    .bg-indigo-primary { background-color: #1E3A8A; }
+    .hover\:bg-indigo-deep:hover { background-color: #312E81; }
+    .text-accent { color: #DAA520; }
+    .bg-accent { background-color: #DAA520; }
+    .hover\:bg-accent-light:hover { background-color: #FDB813; }
+    .border-accent { border-color: #DAA520; }
+    
+    .code-input {
+        width: 50px;
+        height: 60px;
+        font-size: 24px;
+        text-align: center;
+        font-weight: bold;
+        border: 2px solid #D1D5DB;
+        border-radius: 8px;
+        margin: 0 5px;
+    }
+    
+    .code-input:focus {
+        outline: none;
+        border-color: #DAA520;
+        box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.1);
+    }
+</style>
+
+<body class="bg-cream">
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <img src="assets/logo.png" alt="ATS Scanner Logo" class="h-10 w-10 mr-3">
+                        <span class="text-xl font-bold text-indigo-deep">ATS Scanner</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="min-h-screen pt-16 pb-24 flex items-center justify-center">
+        <div class="max-w-md w-full mx-auto px-4">
+            <div class="bg-white rounded-2xl custom-shadow p-8">
+                <div class="text-center mb-8">
+                    <div class="inline-block p-4 bg-cream rounded-full mb-4">
+                        <i class="bi bi-envelope-check text-4xl text-accent"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold mb-2 text-indigo-deep">
+                        Verify Your Email
+                    </h1>
+                    <p class="text-gray-600">We've sent a 6-digit code to</p>
+                    <p class="text-indigo-deep font-medium" id="userEmail"></p>
+                </div>
+
+                <form id="verifyForm" class="space-y-6">
+                    <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                    </div>
+
+                    <div id="successMessage" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3 text-center">Enter Verification Code</label>
+                        <div class="flex justify-center">
+                            <input type="text" maxlength="1" class="code-input" id="code1" autocomplete="off">
+                            <input type="text" maxlength="1" class="code-input" id="code2" autocomplete="off">
+                            <input type="text" maxlength="1" class="code-input" id="code3" autocomplete="off">
+                            <input type="text" maxlength="1" class="code-input" id="code4" autocomplete="off">
+                            <input type="text" maxlength="1" class="code-input" id="code5" autocomplete="off">
+                            <input type="text" maxlength="1" class="code-input" id="code6" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="verifyButton"
+                        class="w-full bg-indigo-primary text-white py-3 px-4 rounded-lg hover:bg-indigo-deep transition flex items-center justify-center font-medium">
+                        <i class="bi bi-check-circle mr-2"></i> Verify Email
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-gray-600 text-sm mb-3">
+                        Didn't receive the code?
+                    </p>
+                    <button onclick="resendCode()" id="resendButton"
+                        class="text-accent hover:text-accent font-medium underline">
+                        Resend Code
+                    </button>
+                    <p class="text-gray-500 text-xs mt-4">
+                        Code expires in 15 minutes
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="auth.js"></script>
+    <script>
+        // API_BASE_URL is already defined in auth.js
+        
+        // Get email from URL params or localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email') || localStorage.getItem('pendingVerificationEmail');
+        
+        if (!email) {
+            window.location.href = 'signup.html';
+        }
+        
+        document.getElementById('userEmail').textContent = email;
+        
+        // Auto-focus and auto-advance code inputs
+        const codeInputs = document.querySelectorAll('.code-input');
+        codeInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < codeInputs.length - 1) {
+                    codeInputs[index + 1].focus();
+                }
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                    codeInputs[index - 1].focus();
+                }
+            });
+            
+            // Only allow numbers
+            input.addEventListener('keypress', (e) => {
+                if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        // Focus first input
+        codeInputs[0].focus();
+        
+        // Handle form submission
+        document.getElementById('verifyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const code = Array.from(codeInputs).map(input => input.value).join('');
+            
+            if (code.length !== 6) {
+                showError('Please enter all 6 digits');
+                return;
+            }
+            
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            const verifyButton = document.getElementById('verifyButton');
+            
+            errorDiv.classList.add('hidden');
+            successDiv.classList.add('hidden');
+            verifyButton.disabled = true;
+            verifyButton.innerHTML = '<i class="bi bi-hourglass-split mr-2 animate-spin"></i> Verifying...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/verify-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        verification_code: code
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Verification failed');
+                }
+                
+                // Store token and user
+                localStorage.setItem('token', data.access_token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                localStorage.removeItem('pendingVerificationEmail');
+                
+                // Show success message
+                successDiv.textContent = '✓ Email verified successfully! Redirecting...';
+                successDiv.classList.remove('hidden');
+                
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+                
+            } catch (error) {
+                showError(error.message || 'Verification failed. Please try again.');
+                verifyButton.disabled = false;
+                verifyButton.innerHTML = '<i class="bi bi-check-circle mr-2"></i> Verify Email';
+            }
+        });
+        
+        // Resend code function
+        async function resendCode() {
+            const resendButton = document.getElementById('resendButton');
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            errorDiv.classList.add('hidden');
+            successDiv.classList.add('hidden');
+            resendButton.disabled = true;
+            resendButton.textContent = 'Sending...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/resend-verification`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Failed to resend code');
+                }
+                
+                successDiv.textContent = '✓ New code sent! Please check your email.';
+                successDiv.classList.remove('hidden');
+                
+                // Clear inputs
+                codeInputs.forEach(input => input.value = '');
+                codeInputs[0].focus();
+                
+                // Re-enable button after 30 seconds
+                setTimeout(() => {
+                    resendButton.disabled = false;
+                    resendButton.textContent = 'Resend Code';
+                }, 30000);
+                
+            } catch (error) {
+                showError(error.message || 'Failed to resend code');
+                resendButton.disabled = false;
+                resendButton.textContent = 'Resend Code';
+            }
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+        }
+    </script>
+</body>
+
+</html>
