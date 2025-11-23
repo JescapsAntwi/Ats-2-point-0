@@ -286,8 +286,16 @@
                         </div>
                     </div>
                     <div class="flex justify-center">
-                        <img src="https://images.unsplash.com/photo-1586281380117-5a60ae2050cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHJlc3VtZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
-                            alt="Resume analysis illustration" class="rounded-lg shadow-lg max-w-full h-auto">
+                        <div class="relative">
+                            <img src="assets/pic.jpeg" alt="Jescaps Antwi - Creator of ATS Scanner" 
+                                class="rounded-lg shadow-lg max-w-full h-auto object-cover" 
+                                style="max-height: 400px;">
+                            <div class="absolute bottom-4 left-4 right-4 bg-white bg-opacity-95 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+                                <p class="text-xs font-semibold text-indigo-deep">Built by</p>
+                                <p class="text-base font-bold text-accent">Jescaps Antwi</p>
+                                <p class="text-xs text-gray-600 mt-1">Software Engineer & AI Enthusiast</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -310,30 +318,30 @@
                 <div class="w-full max-w-2xl px-4">
                     <div class="bg-white rounded-xl shadow-md p-8">
                         <h3 class="text-xl font-semibold mb-6">Send Me a Message</h3>
-                        <form onsubmit="handleSubmit(event)" class="space-y-5">
+                        <form id="contactForm" class="space-y-5"></form>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                                <input type="text" required
+                                <input type="text" id="contactName" required
                                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                                <input type="email" required
+                                <input type="email" id="contactEmail" required
                                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
-                                <input type="text" required
+                                <input type="text" id="contactSubject" required
                                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                                <textarea required rows="4"
+                                <textarea id="contactMessage" required rows="4"
                                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                             </div>
                             <button type="submit"
                                 class="w-full bg-accent text-white py-3 rounded-md hover:bg-accent-light transition font-medium">
-                                Send Message
+                                <i class="bi bi-envelope mr-2"></i> Send Message
                             </button>
                         </form>
                     </div>
@@ -343,8 +351,107 @@
         </div>
     </section>
 
+    <!-- Footer -->
+    <footer class="bg-indigo-deep text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="assets/logo.png" alt="ATS Scanner Logo" class="h-10 w-10 mr-3">
+                        <span class="text-xl font-bold">ATS Scanner</span>
+                    </div>
+                    <p class="text-gray-300 text-sm">
+                        AI-powered resume optimization tool to help you land your dream job.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4 text-accent">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#home" class="text-gray-300 hover:text-accent transition">Home</a></li>
+                        <li><a href="#about" class="text-gray-300 hover:text-accent transition">About</a></li>
+                        <li><a href="#contact" class="text-gray-300 hover:text-accent transition">Contact</a></li>
+                        <li><a href="dashboard.html" class="text-gray-300 hover:text-accent transition">Dashboard</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4 text-accent">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="https://github.com/JescapsAntwi" target="_blank" 
+                            class="text-gray-300 hover:text-accent transition text-2xl"
+                            title="GitHub">
+                            <i class="bi bi-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/jescapsantwi/" target="_blank" 
+                            class="text-gray-300 hover:text-accent transition text-2xl"
+                            title="LinkedIn">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                        <a href="mailto:antwijescaps1@gmail.com" 
+                            class="text-gray-300 hover:text-accent transition text-2xl"
+                            title="Email">
+                            <i class="bi bi-envelope"></i>
+                        </a>
+                    </div>
+                    <div class="mt-4 p-4 bg-white bg-opacity-10 rounded-lg">
+                        <p class="text-xs text-gray-300 mb-2">Built with ❤️ by</p>
+                        <p class="font-bold text-accent text-lg">Jescaps Antwi</p>
+                        <p class="text-xs text-gray-400 mt-1">Software Engineer</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-600 pt-8 text-center">
+                <p class="text-sm text-gray-400">
+                    © 2025 ATS Scanner. All rights reserved. | Powered by Google Gemini AI
+                </p>
+                <p class="text-xs text-gray-500 mt-2">
+                    Designed & Developed by <span class="text-accent font-semibold">Jescaps Antwi</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
     <script src="auth.js"></script>
     <script src="script.js"></script>
+    <script>
+        // Wait for DOM to load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, setting up contact form...');
+            
+            const contactForm = document.getElementById('contactForm');
+            console.log('Contact form found:', contactForm);
+            
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    console.log('Form submitted!');
+                    
+                    // Get form values
+                    const name = document.getElementById('contactName').value;
+                    const email = document.getElementById('contactEmail').value;
+                    const subject = document.getElementById('contactSubject').value;
+                    const message = document.getElementById('contactMessage').value;
+                    
+                    console.log('Values:', { name, email, subject, message });
+                    
+                    // Compose email body
+                    const emailBody = `Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
+                    
+                    // Create mailto link
+                    const mailtoLink = `mailto:antwijescaps1@gmail.com?subject=${encodeURIComponent(subject)}&body=${emailBody}`;
+                    
+                    console.log('Opening:', mailtoLink);
+                    
+                    // Open email client
+                    window.location.href = mailtoLink;
+                });
+            } else {
+                console.error('Contact form not found!');
+            }
+        });
+    </script>
 </body>
 
 </html>
