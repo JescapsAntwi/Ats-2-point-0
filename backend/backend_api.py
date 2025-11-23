@@ -405,6 +405,9 @@ async def create_scan(
     missing_keywords = result.get("MissingKeywords", [])
     matched_keywords = result.get("MatchedKeywords", [])
     profile_summary = result.get("Profile Summary", "")
+    detailed_improvements = result.get("Detailed Improvements", [])
+    quick_wins = result.get("Quick Wins", [])
+    strengths = result.get("Strengths", [])
     
     # Save scan to database
     scans_collection = get_scans_collection()
@@ -417,6 +420,9 @@ async def create_scan(
         "missing_keywords": missing_keywords,
         "matched_keywords": matched_keywords,
         "ai_feedback": profile_summary,
+        "detailed_improvements": detailed_improvements,
+        "quick_wins": quick_wins,
+        "strengths": strengths,
         "timestamp": datetime.utcnow()
     }
     
@@ -433,6 +439,9 @@ async def create_scan(
         missing_keywords=scan_doc["missing_keywords"],
         matched_keywords=scan_doc["matched_keywords"],
         ai_feedback=scan_doc["ai_feedback"],
+        detailed_improvements=scan_doc.get("detailed_improvements", []),
+        quick_wins=scan_doc.get("quick_wins", []),
+        strengths=scan_doc.get("strengths", []),
         timestamp=scan_doc["timestamp"]
     )
 
@@ -458,6 +467,9 @@ async def create_scan_from_file(
         missing_keywords = result.get("MissingKeywords", [])
         matched_keywords = result.get("MatchedKeywords", [])
         profile_summary = result.get("Profile Summary", "")
+        detailed_improvements = result.get("Detailed Improvements", [])
+        quick_wins = result.get("Quick Wins", [])
+        strengths = result.get("Strengths", [])
         
         # Save scan to database
         scans_collection = get_scans_collection()
@@ -470,6 +482,9 @@ async def create_scan_from_file(
             "missing_keywords": missing_keywords,
             "matched_keywords": matched_keywords,
             "ai_feedback": profile_summary,
+            "detailed_improvements": detailed_improvements,
+            "quick_wins": quick_wins,
+            "strengths": strengths,
             "timestamp": datetime.utcnow()
         }
         
@@ -486,6 +501,9 @@ async def create_scan_from_file(
             missing_keywords=scan_doc["missing_keywords"],
             matched_keywords=scan_doc["matched_keywords"],
             ai_feedback=scan_doc["ai_feedback"],
+            detailed_improvements=scan_doc.get("detailed_improvements", []),
+            quick_wins=scan_doc.get("quick_wins", []),
+            strengths=scan_doc.get("strengths", []),
             timestamp=scan_doc["timestamp"]
         )
     except Exception as e:
@@ -577,6 +595,9 @@ async def get_scan(
         missing_keywords=scan["missing_keywords"],
         matched_keywords=scan["matched_keywords"],
         ai_feedback=scan["ai_feedback"],
+        detailed_improvements=scan.get("detailed_improvements", []),
+        quick_wins=scan.get("quick_wins", []),
+        strengths=scan.get("strengths", []),
         timestamp=scan["timestamp"]
     )
 
@@ -648,6 +669,9 @@ async def update_scan(
         missing_keywords=updated_scan["missing_keywords"],
         matched_keywords=updated_scan["matched_keywords"],
         ai_feedback=updated_scan["ai_feedback"],
+        detailed_improvements=updated_scan.get("detailed_improvements", []),
+        quick_wins=updated_scan.get("quick_wins", []),
+        strengths=updated_scan.get("strengths", []),
         timestamp=updated_scan["timestamp"]
     )
 

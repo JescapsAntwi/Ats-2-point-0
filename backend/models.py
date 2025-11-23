@@ -101,6 +101,9 @@ class ScanResponse(BaseModel):
     missing_keywords: List[str]
     matched_keywords: List[str]
     ai_feedback: str
+    detailed_improvements: Optional[List[Dict[str, Any]]] = []
+    quick_wins: Optional[List[str]] = []
+    strengths: Optional[List[str]] = []
     timestamp: datetime
 
     class Config:
