@@ -69,38 +69,47 @@ async def startup_event():
 
 @app.post("/api/auth/signup", response_model=dict, status_code=status.HTTP_201_CREATED)
 async def signup(user_data: UserCreate):
-    """User registration endpoint - creates unverified account and sends verification email"""
+    """User registration endpoint - creates account with optional email verification"""
     try:
         users_collection = get_users_collection()
+        
+        # Check if email verification is enabled
+        email_verification_enabled = os.getenv("EMAIL_VERIFICATION_ENABLED", "false").lower() == "true"
         
         # Check if user already exists
         existing_user = users_collection.find_one({"email": user_data.email})
         if existing_user:
-            # If user exists but not verified, allow resending verification
-            if not existing_user.get("is_verified", False):
+            # If verification is disabled, delete unverified users and allow re-registration
+            if not email_verification_enabled and not existing_user.get("is_verified", False):
+                users_collection.delete_one({"_id": existing_user["_id"]})
+            # If user exists and is verified, reject
+            elif existing_user.get("is_verified", True):
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Email already registered"
+                )
+            # If verification is enabled and user is unverified
+            elif email_verification_enabled:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="Email already registered but not verified. Please check your email or request a new code."
                 )
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email already registered"
-            )
-        
-        # Generate verification code
-        verification_code = generate_verification_code()
-        code_expires_at = datetime.utcnow() + timedelta(minutes=15)
         
         # Hash password and create user
         hashed_password = get_password_hash(user_data.password)
         user_doc = {
             "email": user_data.email,
             "password": hashed_password,
-            "is_verified": False,
-            "verification_code": verification_code,
-            "code_expires_at": code_expires_at,
+            "is_verified": not email_verification_enabled,  # Auto-verify if verification disabled
             "created_at": datetime.utcnow()
         }
+        
+        # Add verification code only if verification is enabled
+        if email_verification_enabled:
+            verification_code = generate_verification_code()
+            code_expires_at = datetime.utcnow() + timedelta(minutes=15)
+            user_doc["verification_code"] = verification_code
+            user_doc["code_expires_at"] = code_expires_at
         
         # Only add name if it's provided
         if user_data.name:
@@ -109,22 +118,46 @@ async def signup(user_data: UserCreate):
         result = users_collection.insert_one(user_doc)
         user_id = str(result.inserted_id)
         
-        # Send verification email
-        try:
-            send_verification_email(user_data.email, verification_code, user_data.name)
-        except Exception as email_error:
-            # If email fails, delete the user and raise error
-            users_collection.delete_one({"_id": result.inserted_id})
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Failed to send verification email: {str(email_error)}"
+        # If verification is enabled, send email
+        if email_verification_enabled:
+            try:
+                send_verification_email(user_data.email, verification_code, user_data.name)
+                return {
+                    "message": "Account created successfully. Please check your email for verification code.",
+                    "email": user_data.email,
+                    "user_id": user_id,
+                    "requires_verification": True
+                }
+            except Exception as email_error:
+                # If email fails, delete the user and raise error
+                users_collection.delete_one({"_id": result.inserted_id})
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=f"Failed to send verification email: {str(email_error)}"
+                )
+        else:
+            # Auto-login without verification
+            access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+            access_token = create_access_token(
+                data={"sub": user_id, "email": user_data.email},
+                expires_delta=access_token_expires
             )
-        
-        return {
-            "message": "Account created successfully. Please check your email for verification code.",
-            "email": user_data.email,
-            "user_id": user_id
-        }
+            
+            return {
+                "message": "Account created successfully.",
+                "email": user_data.email,
+                "user_id": user_id,
+                "requires_verification": False,
+                "access_token": access_token,
+                "token_type": "bearer",
+                "user": {
+                    "id": user_id,
+                    "email": user_data.email,
+                    "name": user_data.name,
+                    "is_verified": True,
+                    "created_at": user_doc["created_at"].isoformat()
+                }
+            }
     except HTTPException:
         raise
     except Exception as e:
