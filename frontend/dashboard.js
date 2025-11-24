@@ -144,7 +144,7 @@ async function loadScans() {
                 window.location.href = 'login.html';
             }, 2000);
         } else if (error.message && error.message.includes('Network error')) {
-            errorText = 'Cannot connect to server. Make sure the backend is running on http://localhost:8000';
+            errorText = 'Cannot connect to server. Please check your internet connection.';
         }
         
         const errorTextEl = document.getElementById('errorText') || errorMessage;

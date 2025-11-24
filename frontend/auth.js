@@ -2,7 +2,7 @@
  * Authentication utility functions
  */
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://ats-2-point-0.onrender.com';
 
 /**
  * Check if user is authenticated
@@ -61,7 +61,7 @@ async function signup(email, password, name = null) {
     } catch (error) {
         // Handle network errors
         if (error instanceof TypeError && error.message.includes('fetch')) {
-            throw new Error('Network error: Could not connect to server. Make sure the backend is running on http://localhost:8000');
+            throw new Error('Network error: Could not connect to server. Make sure the backend is running on https://ats-2-point-0.onrender.com');
         }
         throw error;
     }
@@ -101,7 +101,7 @@ async function login(email, password) {
     } catch (error) {
         // Handle network errors
         if (error instanceof TypeError && error.message.includes('fetch')) {
-            throw new Error('Network error: Could not connect to server. Make sure the backend is running on http://localhost:8000');
+            throw new Error('Network error: Could not connect to server. Make sure the backend is running on https://ats-2-point-0.onrender.com');
         }
         throw error;
     }
@@ -169,7 +169,7 @@ async function authenticatedFetch(url, options = {}) {
     } catch (error) {
         // Handle network errors
         if (error instanceof TypeError && error.message.includes('fetch')) {
-            throw new Error('Network error: Could not connect to server. Make sure the backend is running on http://localhost:8000');
+            throw new Error('Network error: Could not connect to server. Make sure the backend is running on https://ats-2-point-0.onrender.com');
         }
         throw error;
     }

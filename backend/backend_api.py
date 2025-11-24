@@ -44,7 +44,12 @@ app = FastAPI(title="ATS Scanner API", version="1.0.0")
 # CORS for frontend access
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For production, use specific domain
+    allow_origins=[
+        "http://localhost:8080",  # Local development
+        "https://*.vercel.app",  # Vercel deployments
+        "https://ats-2-point-0.vercel.app",  # Your production frontend (update with your actual URL)
+        "*"  # Allow all for now - restrict in production
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -108,7 +108,7 @@ async function analyzeResume() {
     `;
 
     try {
-        const response = await fetch("http://localhost:8000/analyze-resume/", {
+        const response = await fetch("https://ats-2-point-0.onrender.com/analyze-resume/", {
             method: "POST",
             body: formData
         });
@@ -164,7 +164,7 @@ async function analyzeAndSaveResume() {
     try {
         // Use the upload endpoint which handles both analysis and saving
         const token = getToken();
-        const response = await fetch("http://localhost:8000/api/scans/upload", {
+        const response = await fetch("https://ats-2-point-0.onrender.com/api/scans/upload", {
             method: "POST",
             headers: {
                 'Authorization': `Bearer ${token}`
