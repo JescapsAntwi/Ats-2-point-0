@@ -125,10 +125,23 @@
             
             try {
                 const response = await signup(email, password, name);
-                // Store email for verification page
-                localStorage.setItem('pendingVerificationEmail', email);
-                // Redirect to verification page
-                window.location.href = `verify.html?email=${encodeURIComponent(email)}`;
+                console.log('Signup response:', response);
+                
+                // Check response format and handle accordingly
+                if (response.access_token && response.user) {
+                    // Auto-login (no verification required)
+                    localStorage.setItem('token', response.access_token);
+                    localStorage.setItem('user', JSON.stringify(response.user));
+                    window.location.href = 'index.html';
+                } else if (response.message && response.message.includes('verification')) {
+                    // Verification required
+                    localStorage.setItem('pendingVerificationEmail', email);
+                    window.location.href = `verify.html?email=${encodeURIComponent(email)}`;
+                } else {
+                    // Fallback - redirect to login
+                    alert('Account created successfully! Please login.');
+                    window.location.href = 'login.html';
+                }
             } catch (error) {
                 console.error('Signup error:', error);
                 errorDiv.textContent = error.message || 'An error occurred during signup';
