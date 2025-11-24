@@ -748,3 +748,14 @@ async def analyze_resume(resume: UploadFile, jd: str = Form(...)):
 async def test_endpoint():
     """Test endpoint"""
     return {"status": "ok", "message": "API is working"}
+
+
+@app.delete("/api/admin/cleanup-unverified")
+async def cleanup_unverified_users():
+    """Delete all unverified users (admin endpoint)"""
+    users_collection = get_users_collection()
+    result = users_collection.delete_many({"is_verified": False})
+    return {
+        "message": f"Deleted {result.deleted_count} unverified users",
+        "deleted_count": result.deleted_count
+    }
