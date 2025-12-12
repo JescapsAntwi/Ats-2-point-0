@@ -1,0 +1,148 @@
+@startuml ATS_Scanner_System_Architecture
+!theme plain
+skinparam backgroundColor #FAF9F6
+skinparam classBackgroundColor #FFFFFF
+skinparam classBorderColor #1E3A8A
+skinparam classArrowColor #312E81
+skinparam noteBkgColor #FDB813
+skinparam noteBorderColor #DAA520
+skinparam componentBackgroundColor #E8F0FE
+skinparam componentBorderColor #1E3A8A
+
+title ATS Scanner 2.0 - Complete System Architecture & Data Flow
+
+package "PRESENTATION TIER - Frontend" {
+    component [Landing Page\n(index.html)] as LandingPage
+    component [Login Page\n(login.html)] as LoginPage
+    component [Signup Page\n(signup.html)] as SignupPage
+    component [Dashboard\n(dashboard.html)] as Dashboard
+    component [Verification Page\n(verify.html)] as VerifyPage
+    
+    component [JavaScript Modules] as JSModules {
+        component [auth.js\n(Authentication)] as AuthJS
+        component [script.js\n(Main Logic)] as ScriptJS
+        component [dashboard.js\n(Dashboard Logic)] as DashboardJS
+    }
+    
+    component [Styling] as Styling {
+        component [Tailwind CSS] as TailwindCSS
+        component [Bootstrap Icons] as BootstrapIcons
+        component [styles.css] as StylesCSS
+    }
+}
+
+package "APPLICATION TIER - Backend (FastAPI)" {
+    component [API Gateway\n(CORS Middleware)] as APIGateway
+    
+    component [Authentication Module] as AuthModule {
+        component [auth.py\n(JWT, Password Hashing)] as AuthPy
+        component [email_service.py\n(Verification Emails)] as EmailService
+    }
+    
+    component [API Endpoints] as APIEndpoints {
+        component [Auth Endpoints\n(/api/auth/*)] as AuthEndpoints
+        component [Scan Endpoints\n(/api/scans/*)] as ScanEndpoints
+        component [Legacy Endpoints\n(/analyze-resume/)] as LegacyEndpoints
+    }
+    
+    component [Business Logic] as BusinessLogic {
+        component [helper.py\n(LLM Integration, PDF Parsing)] as HelperPy
+        component [models.py\n(Pydantic Validation)] as ModelsPy
+    }
+    
+    component [Data Access Layer] as DataAccess {
+        component [database.py\n(MongoDB Connection)] as DatabasePy
+    }
+}
+
+package "DATA TIER - Database" {
+    database "MongoDB Atlas" as MongoDB {
+        component [users Collection] as UsersCollection
+        component [scans Collection] as ScansCollection
+    }
+}
+
+package "EXTERNAL SERVICES" {
+    component [Google Gemini 2.0 Flash\n(LLM API)] as GeminiAPI
+    component [Gmail SMTP\n(Email Service)] as GmailSMTP
+}
+
+' Frontend to Backend connections
+LandingPage --> AuthJS
+LoginPage --> AuthJS
+SignupPage --> AuthJS
+Dashboard --> DashboardJS
+VerifyPage --> AuthJS
+
+AuthJS --> APIGateway
+ScriptJS --> APIGateway
+DashboardJS --> APIGateway
+
+' Backend internal connections
+APIGateway --> AuthEndpoints
+APIGateway --> ScanEndpoints
+APIGateway --> LegacyEndpoints
+
+AuthEndpoints --> AuthModule
+AuthEndpoints --> BusinessLogic
+ScanEndpoints --> BusinessLogic
+LegacyEndpoints --> BusinessLogic
+
+AuthModule --> DataAccess
+BusinessLogic --> DataAccess
+
+' External service connections
+HelperPy --> GeminiAPI : "Send Resume + JD"
+EmailService --> GmailSMTP : "Send Verification Email"
+
+' Database connections
+DataAccess --> MongoDB
+
+' Styling connections
+LandingPage --> Styling
+LoginPage --> Styling
+SignupPage --> Styling
+Dashboard --> Styling
+VerifyPage --> Styling
+
+note right of LandingPage
+  **User Entry Point**
+  - Resume upload
+  - Job description input
+  - Instant analysis
+  - Sign up prompt
+end note
+
+note right of AuthModule
+  **Security Layer**
+  - JWT token generation
+  - Password hashing (bcrypt)
+  - Email verification
+  - Session management
+end note
+
+note right of HelperPy
+  **AI Integration**
+  - PDF text extraction
+  - Prompt engineering
+  - LLM response parsing
+  - JSON validation
+end note
+
+note right of MongoDB
+  **Persistent Storage**
+  - User accounts
+  - Scan history
+  - Analysis results
+  - Verification codes
+end note
+
+note right of GeminiAPI
+  **AI Analysis Engine**
+  - Resume-to-JD matching
+  - Keyword extraction
+  - ATS score calculation
+  - Improvement suggestions
+end note
+
+@enduml

@@ -1,0 +1,20 @@
+# 1. Deactivate current venv
+deactivate
+
+# 2. Remove broken venv
+rm -rf venv312
+
+# 3. Create new venv WITH pip (--upgrade-deps ensures pip is installed)
+python3 -m venv venv312 --upgrade-deps
+
+# 4. Activate it
+source venv312/bin/activate
+
+# 5. Now pip should work
+pip --version
+
+# 6. Install requirements
+pip install -r requirements.txt
+
+# 7. Run your app
+uvicorn backend.backend_api:app --reload
