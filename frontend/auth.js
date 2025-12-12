@@ -2,7 +2,10 @@
  * Authentication utility functions
  */
 
-const API_BASE_URL = 'https://ats-2-point-0.onrender.com';
+// Auto-detect environment and set API URL
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000'  // Local development
+    : 'https://ats-2-point-0.onrender.com';  // Production (Vercel)
 
 /**
  * Check if user is authenticated
