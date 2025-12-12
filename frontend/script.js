@@ -108,7 +108,10 @@ async function analyzeResume() {
     `;
 
     try {
-        const response = await fetch("https://ats-2-point-0.onrender.com/analyze-resume/", {
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:8000'
+            : 'https://ats-2-point-0.onrender.com';
+        const response = await fetch(`${API_URL}/analyze-resume/`, {
             method: "POST",
             body: formData
         });
@@ -164,7 +167,10 @@ async function analyzeAndSaveResume() {
     try {
         // Use the upload endpoint which handles both analysis and saving
         const token = getToken();
-        const response = await fetch("https://ats-2-point-0.onrender.com/api/scans/upload", {
+        const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+            ? 'http://localhost:8000'
+            : 'https://ats-2-point-0.onrender.com';
+        const response = await fetch(`${API_URL}/api/scans/upload`, {
             method: "POST",
             headers: {
                 'Authorization': `Bearer ${token}`
