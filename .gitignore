@@ -1,5 +1,6 @@
 # Ignore Python virtual environments
 venv312/
+venv_py312/
 
 # Ignore compiled Python files
 __pycache__/
