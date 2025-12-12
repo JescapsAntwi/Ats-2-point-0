@@ -75,6 +75,8 @@ async def signup(user_data: UserCreate):
         
         # Check if email verification is enabled
         email_verification_enabled = os.getenv("EMAIL_VERIFICATION_ENABLED", "false").lower() == "true"
+        print(f"🔍 EMAIL_VERIFICATION_ENABLED env var: {os.getenv('EMAIL_VERIFICATION_ENABLED')}")
+        print(f"🔍 Email verification enabled: {email_verification_enabled}")
         
         # Check if user already exists
         existing_user = users_collection.find_one({"email": user_data.email})
