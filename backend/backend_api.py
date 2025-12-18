@@ -36,7 +36,7 @@ if not api_key:
         "Please create a .env file with your Google API key."
     )
 
-print("✅ Google API key loaded successfully")
+print("Google API key loaded successfully")
 configure_genai(api_key)
 
 app = FastAPI(title="ATS Scanner API", version="1.0.0")
