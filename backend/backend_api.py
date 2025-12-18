@@ -57,12 +57,12 @@ async def startup_event():
     try:
         from backend.database import get_database
         db = get_database()
-        print("✅ MongoDB connection successful!")
-        print(f"✅ Database '{db.name}' is ready")
+        print("MongoDB connection successful!")
+        print(f"Database '{db.name}' is ready")
     except Exception as e:
-        print(f"⚠️  MongoDB connection warning: {str(e)}")
-        print("⚠️  The server will start, but database operations may fail.")
-        print("⚠️  Please check your .env file and MongoDB Atlas settings.")
+        print(f"MongoDB connection warning: {str(e)}")
+        print("The server will start, but database operations may fail.")
+        print("Please check your .env file and MongoDB Atlas settings.")
 
 
 # ==================== AUTHENTICATION ENDPOINTS ====================

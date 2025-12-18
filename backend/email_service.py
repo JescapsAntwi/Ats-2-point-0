@@ -161,10 +161,10 @@ def send_verification_email(to_email: str, verification_code: str, user_name: st
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(smtp_email, smtp_password)
             server.send_message(msg)
-            print(f"✅ Verification email sent to {to_email}")
+            print(f"Verification email sent to {to_email}")
             return True
     except Exception as e:
-        print(f"❌ Failed to send email: {str(e)}")
+        print(f"Failed to send email: {str(e)}")
         raise Exception(f"Failed to send verification email: {str(e)}")
 
 
@@ -245,6 +245,6 @@ def send_welcome_email(to_email: str, user_name: str = None):
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(smtp_email, smtp_password)
             server.send_message(msg)
-            print(f"✅ Welcome email sent to {to_email}")
+            print(f"Welcome email sent to {to_email}")
     except Exception as e:
-        print(f"⚠️ Failed to send welcome email: {str(e)}")
+        print(f"Failed to send welcome email: {str(e)}")
