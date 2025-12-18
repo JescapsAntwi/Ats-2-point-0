@@ -19,3 +19,5 @@ docs/MONGODB_SETUP.md
 # Optional: ignore log or temp files
 *.log
 *.tmp
+
+mds/

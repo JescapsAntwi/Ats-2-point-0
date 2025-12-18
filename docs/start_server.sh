@@ -8,7 +8,7 @@ echo ""
 
 # Check if .env file exists
 if [ ! -f .env ]; then
-    echo "⚠️  Warning: .env file not found!"
+    echo "Warning: .env file not found!"
     echo "Please create a .env file with your MongoDB URI and other configuration."
     echo ""
 fi
