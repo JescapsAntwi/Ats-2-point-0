@@ -36,7 +36,7 @@ if not api_key:
         "Please create a .env file with your Google API key."
     )
 
-print("Google API key loaded successfully")
+print("✅ Google API key loaded successfully")
 configure_genai(api_key)
 
 app = FastAPI(title="ATS Scanner API", version="1.0.0")
@@ -57,12 +57,12 @@ async def startup_event():
     try:
         from backend.database import get_database
         db = get_database()
-        print("MongoDB connection successful!")
-        print(f"Database '{db.name}' is ready")
+        print("✅ MongoDB connection successful!")
+        print(f"✅ Database '{db.name}' is ready")
     except Exception as e:
-        print(f"MongoDB connection warning: {str(e)}")
-        print("The server will start, but database operations may fail.")
-        print("Please check your .env file and MongoDB Atlas settings.")
+        print(f"⚠️  MongoDB connection warning: {str(e)}")
+        print("⚠️  The server will start, but database operations may fail.")
+        print("⚠️  Please check your .env file and MongoDB Atlas settings.")
 
 
 # ==================== AUTHENTICATION ENDPOINTS ====================
