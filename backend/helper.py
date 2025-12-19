@@ -13,7 +13,7 @@ def configure_genai(api_key):
 def get_gemini_response(prompt):
     """Generate a response using Gemini with enhanced error handling and response validation."""
     try:
-        model = genai.GenerativeModel('gemini-2.0-flash')
+        model = genai.GenerativeModel('models/gemini-flash-latest')
         response = model.generate_content(prompt)
         
         # Ensure response is not empty
